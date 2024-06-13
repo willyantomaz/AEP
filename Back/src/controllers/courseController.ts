@@ -1,76 +1,68 @@
 import { Request, Response } from 'express';
-import Course, { ICourse } from '../models/Course';
+import Course from '../models/Course';
 
-export const createCourse = async (req: Request, res: Response) => {
-  const { title, description, duration, teacher } = req.body;
-
-  try {
-    const course = new Course({ title, description, duration, teacher });
-    await course.save();
-    res.status(201).json(course);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
-export const getCourses = async (req: Request, res: Response) => {
-  try {
-    const courses = await Course.find();
-    res.status(200).json(courses);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
-export const getCourseById = async (req: Request, res: Response) => {
-  const { id } = req.params;
-
-  try {
-    const course = await Course.findById(id);
-
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+export class CourseController {
+    public async getCourses(req: Request, res: Response): Promise<void> {
+        try {
+            const courses = await Course.find();
+            res.json(courses);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao obter cursos', error });
+        }
     }
 
-    res.status(200).json(course);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+    public async createCourse(req: Request, res: Response): Promise<void> {
+        const { title, description, duration, teacher } = req.body;
+        let image: string | undefined;
 
-export const updateCourse = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { title, description, duration, teacher } = req.body;
+        if (req.file) {
+            image = req.file.buffer.toString('base64');
+        }
 
-  try {
-    const course = await Course.findByIdAndUpdate(
-      id,
-      { title, description, duration, teacher },
-      { new: true }
-    );
-
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+        try {
+            const newCourse = new Course({ title, description, duration, teacher, image });
+            await newCourse.save();
+            res.status(201).json(newCourse);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao criar curso', error });
+        }
     }
 
-    res.status(200).json(course);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+    public async updateCourse(req: Request, res: Response): Promise<void> {
+        const { id } = req.params;
+        const { title, description, duration, teacher } = req.body;
 
-export const deleteCourse = async (req: Request, res: Response) => {
-  const { id } = req.params;
+        try {
+            const course = await Course.findById(id);
+            if (!course) {
+                res.status(404).json({ message: 'Curso não encontrado' });
+                return;
+            }
 
-  try {
-    const course = await Course.findByIdAndDelete(id);
+            course.title = title;
+            course.description = description;
+            course.duration = duration;
+            course.teacher = teacher;
 
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+            await course.save();
+            res.json(course);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao atualizar curso', error });
+        }
     }
 
-    res.status(200).json({ message: 'Course deleted' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+    public async deleteCourse(req: Request, res: Response): Promise<void> {
+        const { id } = req.params;
+
+        try {
+            const course = await Course.findByIdAndDelete(id);
+            if (!course) {
+                res.status(404).json({ message: 'Curso não encontrado' });
+                return;
+            }
+            res.status(204).send();
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao excluir curso', error });
+        }
+    }
+}

@@ -1,18 +1,16 @@
 import { Router } from 'express';
-import {
-  createCourse,
-  getCourses,
-  getCourseById,
-  updateCourse,
-  deleteCourse,
-} from '../controllers/courseController';
+import { CourseController } from '../controllers/courseController';
+import multer from 'multer';
 
 const router = Router();
+const courseController = new CourseController();
 
-router.post('/', createCourse);
-router.get('/', getCourses);
-router.get('/:id', getCourseById);
-router.put('/:id', updateCourse);
-router.delete('/:id', deleteCourse);
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+router.get('/', courseController.getCourses);
+router.post('/', upload.single('image'), courseController.createCourse);
+router.put('/:id', courseController.updateCourse);
+router.delete('/:id', courseController.deleteCourse);
 
 export default router;

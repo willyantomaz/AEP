@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plataforma de Cursos</h1>
+            <nav>
+                <a href="login.html">Login</a>
+                <a href="register.html">Cadastro</a>
+            </nav>
+        </header>
+        <main>
+            <h2>Lista de Cursos</h2>
+            <div id="courseList" class="course-grid">
+                <!-- Os cursos serão listados aqui -->
+            </div>
+
+            <button id="openAddCourseModal" class="add-course-button">Adicionar Novo Curso</button>
+
+            <!-- Modal para adicionar cursos -->
+            <div id="addCourseModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Adicionar Novo Curso</h2>
+                    <form id="addCourseForm">
+                        <div class="form-group">
+                            <label for="addTitle">Título</label>
+                            <input type="text" id="addTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addDescription">Descrição</label>
+                            <textarea id="addDescription" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="addDuration">Duração</label>
+                            <input type="number" id="addDuration" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addTeacher">Professor</label>
+                            <input type="text" id="addTeacher" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addImage">Imagem</label>
+                            <input type="file" id="addImage" accept="image/*" required>
+                        </div>
+                        <button type="submit">Adicionar Curso</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="editCourseFormContainer" style="display:none;">
+                <h2>Editar Curso</h2>
+                <form id="editCourseForm">
+                    <input type="hidden" id="editCourseId">
+                    <div class="form-group">
+                        <label for="editTitle">Título</label>
+                        <input type="text" id="editTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDescription">Descrição</label>
+                        <textarea id="editDescription" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDuration">Duração</label>
+                        <input type="number" id="editDuration" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTeacher">Professor</label>
+                        <input type="text" id="editTeacher" required>
+                    </div>
+                    <button type="submit">Salvar</button>
+                </form>
+            </div>
+        </main>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>

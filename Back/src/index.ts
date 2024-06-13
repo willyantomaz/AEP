@@ -1,21 +1,22 @@
 import express from 'express';
-import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import connectToDatabase from './config/database';
 import userRoutes from './routes/userRoutes';
 import courseRoutes from './routes/courseRoutes';
-import connectDB from './config/database';
-
-dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 
-connectDB();
+app.use(cors()); 
+app.use(bodyParser.json());
 
-app.use(express.json());
+connectToDatabase();
 
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
